@@ -1,0 +1,133 @@
+'''
+Homework 3: Web JSON API -Covid
+Name: Annelise Rasmussen
+
+Code Credit: Dr. Brim's lectures and office hours, 
+https://www.w3schools.com/python/ref_func_max.asp,
+https://www.geeksforgeeks.org/backward-iteration-in-python/
+https://www.geeksforgeeks.org/python-list-index/
+https://www.w3schools.com/python/ref_list_pop.asp
+https://reactgo.com/python-remove-last-n-characters/
+
+Grader note: Sometimes my program will just not like the key "All" 
+but when I try the program over and over again it doesn't have 
+any issues with the key.
+
+
+'''
+
+import requests
+import json
+import math
+import numpy as np
+
+def avg_new_cases(new_cases):
+    return np.mean(new_cases) #calculate using numpy mean function
+
+def highest_index(new_cases):
+    highest_case_index = new_cases.index(max(new_cases)) #finding the index with the highest case value
+    return highest_case_index
+    
+def lowest_index(new_cases): #calculates most recent lowest case index 
+    for i in range(len(new_cases)):
+        if new_cases[i] == 0: #finding the index of the last value that had 0 cases
+            lowest_case_index = i
+    return lowest_case_index
+    
+def find_date(date_index, dates_list):
+    return dates_list[date_index]
+            
+def highest_month(month): #calculates highest case month
+    month_cases = []
+    month_dates = []
+    for date in month: #creates list from dictionary month to compare indexes
+        month_cases.append(month[date])
+        month_dates.append(date)
+    high_month_index = highest_index(month_cases) #calls function to get highest index
+    return find_date(high_month_index, month_dates) #uses find_date to return the highest case date
+    
+def lowest_month(month): #calculates lowest case month
+    month_cases = []
+    month_dates = []
+    for date in month: #create lists from month dictionary to compare indexes
+        month_cases.append(month[date])
+        month_dates.append(date)
+    lowest_month_index = month_cases.index(min(month_cases))  #getting index with lowest case
+    return find_date(lowest_month_index, month_dates) #uses find_date function to return lowest case date
+
+        
+
+    
+print("Covid confirmed cases statistics")
+countries = ["US","Russia","Japan"]
+for country in countries:
+    url ="https://covid-api.mmediagroup.fr/v1/history?country="+country+"&status=confirmed"
+    req1 = requests.get(url) #using requests, get information from api with url
+  
+    dict1 = json.loads(req1.text) #create a dictionary from api info
+    key1 = "All"
+    key2 = "dates"
+    key3 = "2020-01-22"
+    key4 = "2021-12-31"
+
+    cases = []
+    dates_list = []
+    dates_strip = []
+    
+    for date in dict1[key1][key2]:
+    
+        if date <= key4:#take data from 2021-12-31
+            cases.append(dict1[key1][key2][date])
+            dates_list.append(date)
+            dates_strip.append(date[:-3])
+  
+    dates_list.reverse()  # reverse dates_list, dates_strip
+    dates_strip.reverse()
+    dates_list.pop(0)# pop off Jan 22, 2020
+    dates_strip.pop(0) #pop off first date -dont have the new case value for it
+    new_cases = [] 
+    for i in range(1,len(cases)):#calculate new cases
+        new_cases.append(cases[i-1] - cases[i])
+        
+    new_cases.reverse()# reverse new_cases
+    
+    month = {} #create a dictionary to store the month,year and value
+    i = 0
+    for date in dates_strip:
+        if date in month.keys(): #check if month is in key
+            
+            month[date] += new_cases[i] #add to the cases already in dict for month
+        else:
+            month[date] = new_cases[i]#add month as a key in dictionary with case if not there 
+        i += 1
+    
+   
+    
+    print("\nCountry name:" , country)
+    new_case_avg = avg_new_cases(new_cases) #calculate average new cases for dataset
+    print("Average number of new daily confirmed cases for the entire dataset:", new_case_avg)
+    
+    high_index = highest_index(new_cases)#find largest number of new cases index
+    date_highest = find_date(high_index, dates_list)
+    print("Date with the highest new number of confirmed cases:", date_highest)
+    
+    low_index = lowest_index(new_cases) #most recent date with no cases
+    lowest_date = find_date(low_index,dates_list)
+    print("Most recent date with no new confirmed cases:", lowest_date)
+    
+    
+    high_month = highest_month(month) #find the highest and lowest cases month
+    print("Month with the highest new number of confirmed cases", high_month)
+    low_month = lowest_month(month) 
+    print("Month with the lowest new number of confirmed case:", low_month)
+  
+   #create and add keys to dictionary of stats found
+    country_dict = {}
+    country_dict["country"] = country
+    country_dict["avg_new_daily"] = new_case_avg
+    country_dict["date_highest"] = date_highest
+    country_dict["date_lowest"] = lowest_date
+    country_dict["month_highest"] = high_month
+    country_dict["month_lowest"] = low_month
+    json.dump(country_dict, open(country + ".json","w"))#put dictionary into json file
+    print(country_dict)
