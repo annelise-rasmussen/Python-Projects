@@ -1,0 +1,44 @@
+
+import random
+
+class Card():
+    def __init__(self,face,suit,value):#giving card face, suit and value
+        self.face = face
+        self.suit = suit
+        self.value = value
+    def str(self): #returns name of card
+        return (self.face +" of "+ self.suit) 
+    
+class DeckOfCards():
+    def __init__(self): #create the deck
+        self.deck = []
+        self.suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
+        self.faces = ['2','3','4','5','6','7','8','9','10','Jack','Queen','King','Ace']
+        self.card_values = [2,3,4,5,6,7,8,9,10,10,10,10,11]
+        self.card_index = 0
+        
+        for suit in self.suits:
+            for i in range(len(self.faces)):
+                self.deck.append(Card(self.faces[i], suit, self.card_values[i])) #fill deck with card objects
+    def shuffle_deck(self): #shuffle the deck 
+        random.shuffle(self.deck)
+        self.card_index = 0 #when playing again sets index back at the top of deck
+    def print_deck(self): #print the cards in the deck
+        for card in self.deck:
+            if self.card_index == 51:
+                print(card.face,'of', card.suit, end='')#how to get it to print without comma on last card when printed
+            else:
+                print(card.face,'of', card.suit, end=', ')
+                self.card_index += 1
+        self.card_index = 0
+    def get_card(self): #deals the card->gets card from deck
+        self.card_index += 1
+        return self.deck[self.card_index -1] 
+    
+  
+  
+
+
+
+
+
