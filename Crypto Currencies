@@ -1,0 +1,110 @@
+'''
+Homework 4: Crypto Currency Arbitrage
+
+Code Credit: Dr. Brimm's class notes and classes,github,https://www.programiz.com/python-programming/datetime/current-datetime
+https://www.geeksforgeeks.org/python-try-except/,
+https://favtutor.com/blogs/reverse-list-python#:~:text=3)%20Using%20for%20loop,list%20elements%20will%20be%20reversed.
+
+Name: Annelise Rasmussen
+
+'''
+import requests
+import json
+import time
+import networkx as nx
+from networkx.classes.function import path_weight
+from datetime import datetime,timedelta
+import matplotlib.pyplot as plt
+from itertools import permutations
+from itertools import combinations
+
+
+ids = ["ripple", "cardano", "bitcoin-cash","eos","litecoin","ethereum","bitcoin"]
+tickers = ["xrp","ada","bch","eos","ltc","eth","btc"] 
+i = 0
+edges = []
+print("Getting currencies from API")
+for c1 in ids:
+    j = 0
+    for c2 in ids: 
+        if c1 != c2:
+            #print(c1,c2,tickers[i],tickers[j] , i, j)
+            url1 = "https://api.coingecko.com/api/v3/simple/price?ids="+ c1 +"&vs_currencies="+tickers[j]
+            req1 = requests.get(url1)
+            #print(url1)
+            dict1 = json.loads(req1.text)
+            
+            #print(dict1)
+            time.sleep(2) #need for coingecko. It can't take more than 50 requests at time
+            try:
+                edges.append((tickers[i],tickers[j],dict1[c1][tickers[j]])) #adding edges between tickers with weight
+                
+            except:
+                pass
+        j+=1
+    i+=1
+print("Graph Edges:", edges)
+input("Press Enter")
+g = nx.DiGraph() #create graph object
+
+g.add_weighted_edges_from(edges) #add edges to the graph
+
+greatest_weight = -99999999
+greatest_path = []
+lowest_path = []
+lowest_path2 = []
+greatest_path2 = []
+lowest_weight = 99999999
+
+ #need try and accept 
+for n1, n2 in combinations(g.nodes,2):
+    print("paths from ", n1, "to", n2, "----------------------------------")
+    try:
+        for path in nx.all_simple_paths(g, source=n1, target=n2): #finding all simple paths
+        
+                path_weight_to = 1
+                for i in range(len(path)-1):
+                        
+                    path_weight_to *= g[path[i]][path[i+1]]["weight"] #multiplying the path weights to target node
+                        
+                print(path,": ", path_weight_to)
+                path.reverse()
+                        
+                path_weight_from = 1
+                for i in range(len(path)-1):
+                
+                    path_weight_from *= g[path[i]][path[i+1]]["weight"] #multiplying the path weights back from path
+                       
+                print(path, ": ", path_weight_from)    
+                path_weight_factor = path_weight_to * path_weight_from #calculate the arbitrage
+                print("Total path weight: ", path_weight_factor)
+                print()
+                if path_weight_factor > greatest_weight: #update which path has the greatest arbitrage
+                    greatest_weight = path_weight_factor
+                    path.reverse() #reverse back to get the original traversal
+                    greatest_path = path
+                        
+                            
+                elif path_weight_factor < lowest_weight:#update which path has the lowest arbitrage
+                    lowest_weight = path_weight_factor
+                    path.reverse() # reverse back to get the original traverse
+                    lowest_path = path
+                
+    except:
+        pass
+            
+    print()        
+           
+         
+
+for p in greatest_path: #get the reverse path for end output
+    greatest_path2 = [p] + greatest_path2
+for p in lowest_path:
+    lowest_path2 = [p] + lowest_path2
+print("Greatest path weight factor: ", greatest_weight)
+print("Paths:", greatest_path,greatest_path2)
+print("Lowest path weight factor: ", lowest_weight)
+print("Paths:", lowest_path,lowest_path2)
+
+
+input("Press Enter") #force program wait to end program
