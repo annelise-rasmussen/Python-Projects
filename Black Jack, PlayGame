@@ -1,0 +1,73 @@
+'''
+Program: BlackJack
+Code Credit: Dr. Brim's GitHub and videos,https://csatlas.com/python-import-file-module/,
+https://www.w3schools.com/PYTHON/ref_random_randint.asp,https://www.w3schools.com/python/gloss_python_string_concatenation.asp,
+https://www.w3schools.com/python/ref_string_lower.asp#gsc.tab=0&gsc.q=concat%20python
+
+'''
+
+import numpy as np
+import pandas as pd
+import random
+from DeckOfCards import DeckOfCards #reminding it of the class file we created and then importing it
+
+
+
+print("Welcome to the game BlackJack!")# Welcome Message
+
+deck = DeckOfCards() #create deck of cards
+play_again = 'y'
+card_num = 3 #variable to track which card we have gone to in the deck
+hit = "n"
+while(play_again == 'y'):
+    dealer_score = random.randint(17,23) #calculate the dealer's score
+    card_num = 3
+    print("\nDeck before shuffled:") #show deck of cards before they are shuffled
+    deck.print_deck()
+
+    deck.shuffle_deck()#shuffle deck
+    print("\n")
+    print("Deck after being shuffled:") #show the deck of cards after they are shuffled
+    deck.print_deck()
+    user_score = 0
+   
+    card1 = deck.get_card() #ask about whether we need deal_card or if get_card is okay
+    card2 = deck.get_card()
+    card1_value = card1.value
+    card2_value = card2.value
+    user_score = card1_value + card2_value
+    print("\n")
+    print("Card number 1 is:",card1.str()) #deal 2 cards to the user
+    print("Card number 2 is:",card2.str())
+    print("Your total score is: %d"% (user_score))
+    if user_score < 21:
+        hit = input("Would you like a hit? (y/n) ") #ask user if they want an initial hit
+        hit = hit.lower()
+    while(hit == 'y' and user_score < 21):#loop until they stop wanting hits or go over 21 
+       
+        
+        next_card = deck.get_card()  #getting the next card 
+        print("Card number %d is: %s"%(card_num ,next_card.str()))
+        user_score += next_card.value #increase value with increase of card's score
+        
+        print("Your current score is:", user_score)#print the current score to the screen
+        if user_score < 21: #only ask for a hit if the score is < 21
+            hit = input("Would you like a hit? (y/n) ")#ask user if they will like to hit
+            hit = hit.lower()
+            card_num += 1
+    print("Dealer's score is:", dealer_score)
+    if user_score > 21 : #determining if user wins.
+        print("You busted! You lose.")
+    elif dealer_score > 21:
+        print("Dealer busted. You win!") 
+    elif user_score < 22 and user_score <= dealer_score: 
+        print("Dealer had the same or a higher score. You lose.")
+    elif user_score == 21:
+        print("You scored 21 exactly. Nice job. You win!")
+    elif user_score < 21 and user_score > dealer_score:
+        print("Your score was higher than the dealer. You win!")
+
+    play_again = input("Would you like to play again? (y/n) ") #ask user if they want to play again
+    play_again = play_again.lower() #making sure the input y is lower case
+    
+print("Thank you for playing!")
