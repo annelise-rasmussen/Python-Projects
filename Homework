@@ -1,0 +1,80 @@
+'''
+Annelise Rasmussen
+Homework 3.4, 3.11, 3.12, 3.14
+
+'''
+
+#3.4 Printing two rows of 7 '@' symbols
+
+for number in range(2) : #how many times the nested loop will run
+    for number in range(7):#how many times the '@symbol will print. end= gets rid of \n'
+        print(end='@')
+    print()
+    
+
+#3.11 Keeping track of miles/gallon per tank of gas and finding the overall miles/gallon
+
+count1 = 0
+count2 = 0
+total = 0.0 #this is the overall mpg of the trips combined
+
+while(count1 != (-1)):
+    gallons = float(input("Enter the gallons used (-1 to end): ")) 
+    if gallons >= 0 : #if gallons is not -1 , run loop
+       miles = float(input("Enter the miles driven: ")) 
+       mpg = miles / gallons #finds the miles/gallon
+       print("The miles/gallon for this tank was %f" %(mpg))
+       total += mpg#cobines averages from each loop
+       count2 += 1 #counting the number of trips to find overall average
+    else: #when gallons is -1, the loop breaks
+        count1 = -1
+if total == 0.0: #account for exception if they want to end the program the first entry
+    count2 = 1
+print("The overall average miles/gallon was %f"%(total / count2)) #calculates the average mpg of the trips taken
+
+
+
+#3.12 Determining if a 5 digit number is a palindrome
+
+integer = []
+n0 = int(input("Enter a five digit number: "))
+a = n0 // 10000
+integer.append(a) #append first digit to list
+n1 = n0 - (a*10000)#subtracting away the value of the previous digit to isolate next digit
+b = n1 // 1000 #separating second digit from the other 3 numbers
+integer.append(b) #append second digit
+n2 = n1-(b*1000)#subtracting away the value of the previous digit to isolate next digit
+c = n2 // 100
+integer.append(c)#append third digit
+n3 = n2 -(c*100)#subtracting away the value of the previous digit to isolate next digit
+d = n3 // 10#separating 4th digit
+integer.append(d) #append 4th digit to list
+integer.append(n3-(d*10)) #append 5th digit to list by separating from the 4th digit
+
+if(integer[0] == integer[4]) and (integer[1] == integer[3]):
+    print("%d is a palindrome."%(n0))
+else:
+    print("%d is not a palindorme."%(n0))
+
+    
+    
+#3.14 Display a table that shows the value of pi approximated by the terms of the series. 
+#It took 629 iterations before you see 3.14 twice in a row. 
+
+n = 4 
+denom = 1 
+counts1 = 1 #sentinel values
+counts2 = 1
+pi = 0.0
+print("Term\tValue")
+while (counts1 == 1):
+    if (counts2 % 2) == 0: #if count2 is even, you will subtract from pi
+        pi -= (n/denom)
+    else:
+        pi += (n/denom) #if count2 is odd you will add to pi
+    denom += 2
+    counts2 += 1
+    print("%d\t%f"%(counts2, pi))
+    
+    if (counts2 == 650):#how many iterations the loop will go until
+        counts1 = 0
