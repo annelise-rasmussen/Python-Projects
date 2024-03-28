@@ -19,8 +19,8 @@ import os
 import alpaca_trade_api as tradeapi
 
 BASE_URL = 'https://paper-api.alpaca.markets'
-alpaca_id = 'PKZ68GBWIC8YVC8VNLKG'
-alpaca_secret_key = 'Z38BHfifLhH1LPowoxk2FAKa2Icpp3d8greXbEWP'
+alpaca_id = 'ID'
+alpaca_secret_key = 'Secret Key'
 
 api = tradeapi.REST(key_id=alpaca_id, secret_key=alpaca_secret_key, 
                     base_url=BASE_URL, api_version='v2')
