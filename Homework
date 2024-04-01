@@ -1,10 +1,9 @@
 '''
 Annelise Rasmussen
-Homework 3.4, 3.11, 3.12, 3.14
 
 '''
 
-#3.4 Printing two rows of 7 '@' symbols
+# Printing two rows of 7 '@' symbols
 
 for number in range(2) : #how many times the nested loop will run
     for number in range(7):#how many times the '@symbol will print. end= gets rid of \n'
@@ -12,7 +11,7 @@ for number in range(2) : #how many times the nested loop will run
     print()
     
 
-#3.11 Keeping track of miles/gallon per tank of gas and finding the overall miles/gallon
+# Keeping track of miles/gallon per tank of gas and finding the overall miles/gallon
 
 count1 = 0
 count2 = 0
@@ -34,7 +33,7 @@ print("The overall average miles/gallon was %f"%(total / count2)) #calculates th
 
 
 
-#3.12 Determining if a 5 digit number is a palindrome
+# Determining if a 5 digit number is a palindrome
 
 integer = []
 n0 = int(input("Enter a five digit number: "))
@@ -58,7 +57,7 @@ else:
 
     
     
-#3.14 Display a table that shows the value of pi approximated by the terms of the series. 
+# Display a table that shows the value of pi approximated by the terms of the series. 
 #It took 629 iterations before you see 3.14 twice in a row. 
 
 n = 4 
