@@ -1,5 +1,5 @@
 '''
-Homework 3: Web JSON API -Covid
+Web JSON API -Covid
 Name: Annelise Rasmussen
 
 Code Credit: Dr. Brim's lectures and office hours, 
@@ -9,7 +9,7 @@ https://www.geeksforgeeks.org/python-list-index/
 https://www.w3schools.com/python/ref_list_pop.asp
 https://reactgo.com/python-remove-last-n-characters/
 
-Grader note: Sometimes my program will just not like the key "All" 
+note: Sometimes my program will just not like the key "All" 
 but when I try the program over and over again it doesn't have 
 any issues with the key.
 
